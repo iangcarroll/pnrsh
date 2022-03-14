@@ -1,0 +1,17 @@
+{{template "base" .}}
+
+{{define "main"}}
+<h2>Help</h2>
+
+<h3>How does this work?</h3>
+<p>Airlines have mobile applications which use a public API for retrieving reservation information. Often, these APIs expose useful information for travelers, but the app does not directly display it. This tool shows you this information!</p>
+
+<h3>Does this rely on an "exploit"?</h3>
+<p>No. This tool shows you the information that your phone already receives from the airline, but just never shows you. There is no exploit or security issue.</p>
+
+<h3>Is any reservation data stored when using this tool?</h3>
+<p>No. (The hosting providers might store basic information for debugging/monitoring, like your IP address and when you visit.)</p>
+
+<h3>What does "Coupons Appear To Cover Entire PNR" represent?</h3>
+<p>When "Coupons Appear To Cover Entire PNR" is true, it means that the displayed ticket appears to cover at least all of the segments in the PNR. This is a <strong>very basic check</strong> as the full information of the ticket coupons is not available -- this only checks the flight time and origin/destination. If your ticket is in the wrong class of service, this cannot be detected.</p>
+{{end}}

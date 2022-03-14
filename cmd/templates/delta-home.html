@@ -1,0 +1,28 @@
+{{template "base" .}}
+
+{{define "main"}}
+{{if .Error}}
+<div class="alert alert-danger" role="alert">
+    <strong>Sorry, your reservation could not be retrieved at this time.</strong> This could happen for a few reasons: your reservation has been fully flown, Delta has blocked our server, or your reservation hit an edge case with the parser.
+</div>
+{{end}}
+
+<h2>Delta</h2>
+<p>pnr.sh allows you to dive into your Delta reservation and see information that is not normally displayed on the website. You can see ticketing information, SSRs and reservation notes, and more useful information!</p>
+
+<form method="POST" action="/delta">
+    <div class="mb-3">
+        <input type="text" class="form-control" id="first_name" name="first_name" placeholder="First name">
+    </div>
+
+    <div class="mb-3">
+        <input type="text" class="form-control" id="last_name" name="last_name" placeholder="Last name">
+    </div>
+
+    <div class="mb-3">
+        <input type="text" class="form-control" id="confirmation_code" name="confirmation_code" placeholder="Delta confirmation number (ex. ABC4EF)">
+    </div>
+    
+    <button class="btn btn-lg btn-primary" role="submit">Retrieve Reservation</button>
+</form><br />
+{{end}}

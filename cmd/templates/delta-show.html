@@ -1,0 +1,218 @@
+{{template "base" .}}
+
+{{define "main"}}
+<div class="container">
+    <h2>Confirmation #{{.ConfirmationCode}}</h2>
+    <ul class="nav nav-pills">
+        <li class="nav-item">
+          <a class="nav-link" style="color: black">Tools</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" href="{{.PNR.Fare.SMCalcLink}}" target="_blank">Calculate Earnings</a>
+        </li>
+    </ul>      
+    <hr />
+
+    <div class="row">
+      <div class="col">
+        <h3>Flights</h3>
+        {{range .PNR.Flights}}
+            <h5><strong>{{.MarketingAirlineCode}}{{.FlightNumber}}</strong> {{.OriginAirportCode}} ✈️ {{.DestinationAirportCode}} <span class="badge bg-primary">{{.CurrentActionCode}}</span></h5>
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <td><strong>Status</strong></td>
+                        <td>{{.Status}}</td>
+                    </tr>
+
+                    <tr>
+                        <td><strong>Scheduled Departure</strong></td>
+                        <td>{{.ScheduledDeparture}}</td>
+                    </tr>
+
+                    <tr>
+                        <td><strong>Scheduled Arrival</strong></td>
+                        <td>{{.ScheduledArrival}}</td>
+                    </tr>
+
+                    <tr>
+                        <td><strong>Distance</strong></td>
+                        <td>{{.Distance}} mi</td>
+                    </tr>
+
+                    <tr>
+                        <td><strong>Operating/Marketing Airline</strong></td>
+                        <td>{{.OperatingAirlineCode}}/{{.MarketingAirlineCode}}</td>
+                    </tr>
+
+                    <tr>
+                        <td><strong>Current Action Code</strong></td>
+                        <td>{{.CurrentActionCode}}</td>
+                    </tr>
+
+                    <tr>
+                        <td><strong>Previous Action Code</strong></td>
+                        <td>{{.PreviousActionCode}}</td>
+                    </tr>
+
+                    <tr>
+                        <td><strong>Upgrade Status</strong></td>
+                        <td>{{.UpgradeStatus}}</td>
+                    </tr>
+
+                    <tr>
+                        <td><strong>Class of Service</strong></td>
+                        <td>{{.ClassOfService}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        {{end}}
+
+        <h3>Passengers</h3>
+        {{range .PNR.Passengers}}
+            <div class="card">
+                <div class="card-body">
+                    {{if .CheckedIn}}
+                    <h5>{{.Name}} <span class="badge bg-success">Checked In</span> <span class="badge bg-primary">{{.Status}}</span></h5>
+                    {{else}}
+                    <h5>{{.Name}} <span class="badge bg-secondary">Not Checked In</span> <span class="badge bg-primary">{{.Status}}</span></h5>
+                    {{end}}
+        
+                    <h6>Filtered SSRs</h6>
+                    <table class="table">
+                        <tbody>
+                            {{range .SSRs}}
+                            <tr>
+                                <td><strong>{{.Type}}</strong></td>
+                                <td>{{.Remark}}</td>
+                            </tr>
+                            {{end}}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <br />
+        {{end}}
+
+        <h3>Fare</h3>
+        <table class="table">
+            <tbody>
+                <tr>
+                    <td><strong>Total Fare</strong></td>
+                    <td>{{.PNR.Fare.TotalFare}} {{.PNR.Fare.TotalCurrencyCode}}</td>
+                </tr>
+
+                <tr>
+                    <td><strong>Base Fare</strong></td>
+                    <td>{{.PNR.Fare.BaseFare}} {{.PNR.Fare.BaseCurrencyCode}}</td>
+                </tr>
+
+                <tr>
+                    <td><strong>Total Taxes + Carrier-Imposed Fees</strong></td>
+                    <td>{{.PNR.Fare.TotalTax}} {{.PNR.Fare.TotalCurrencyCode}}</td>
+                </tr>
+
+                <tr>
+                    <td><strong>Estimated MQD</strong></td>
+                    <td>{{.PNR.Fare.EstimatedMQD}} {{.PNR.Fare.BaseCurrencyCode}}</td>
+                </tr>
+
+                <tr>
+                    <td><strong>Fare Basis Code</strong></td>
+                    <td>{{.PNR.Fare.FareBasisCode}}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h4>Taxes + Carrier-Imposed Fees</h4>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Type</td>
+                    <th scope="col">Amount</td>
+                    <th scope="col">Is Carrier-Imposed</td>
+                </tr>
+            </thead>
+            <tbody>
+                {{range .PNR.Fare.TaxRows}}
+                <tr>
+                    <td><strong>{{.TaxType}}</strong></td>
+                    <td>{{.Amount}} {{.Currency}}</td>
+                    <td>{{.CarrierImposedFee}}</td>
+                </tr>
+                {{end}}
+            </tbody>
+        </table>
+      </div>
+      <div class="col">
+        <h3>Remarks</h3>
+        <table class="table">
+            <tbody>
+            {{range .PNR.Remarks}}
+                <tr>
+                    <td><strong>{{.RemarkType}}</strong></td>
+                    <td>{{.FreeFormText}}</td>
+                </tr>
+            {{end}}
+            </tbody>
+        </table>
+
+        <h3>Tickets</h3>
+        {{range .PNR.Tickets}}
+        <div class="card">
+            <div class="card-body">
+                <h4>{{.Number}}</h4>
+
+                <table class="table">
+                    <tbody>
+                        <tr>
+                            <td><strong>Status</strong></td>
+                            <td>{{.Status}}</td>
+                        </tr>
+
+                        <tr>
+                            <td><strong>Issue Date</strong></td>
+                            <td>{{.IssueDate}}</td>
+                        </tr>
+
+                        <tr>
+                            <td><strong>Expiration Date</strong></td>
+                            <td>{{.ExpirationDate}}</td>
+                        </tr>
+
+                        <tr>
+                            <td><strong>Passenger</strong></td>
+                            <td>{{.PassengerName}}</td>
+                        </tr>
+
+                        <tr>
+                            <td><strong># of Coupons in Ticket</strong></td>
+                            <td>{{.NumCoupons}}</td>
+                        </tr>
+
+                        <tr>
+                            <td><strong>Coupons Appear To Cover Entire PNR (experimental)</strong></td>
+                            <td>{{.ValidatedAgainstCoupon}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <br />
+        {{end}}
+
+        <h3>Flags</h3>
+        <table class="table">
+            <tbody>
+            {{range .PNR.Flags}}
+                <tr>
+                    <td><strong>{{.Name}}</strong></td>
+                    <td>{{.Value}}</td>
+                </tr>
+            {{end}}
+            </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+{{end}}

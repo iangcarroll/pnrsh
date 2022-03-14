@@ -1,0 +1,104 @@
+{{template "base" .}}
+
+{{define "main"}}
+<div class="container">
+    <h2>Confirmation #{{.ConfirmationCode}}</h2>
+    <hr />
+
+    <div class="row">
+      <div class="col">
+        <h3>Flights</h3>
+        {{range .PNR.Flights}}
+            <h5><strong>{{.MarketingAirlineCode}}{{.FlightNumber}}</strong> {{.OriginAirportCode}} ✈️ {{.DestinationAirportCode}} <span class="badge bg-primary">{{.CurrentActionCode}}</span></h5>
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <td><strong>Status</strong></td>
+                        <td>{{.Status}}</td>
+                    </tr>
+
+                    <tr>
+                        <td><strong>Scheduled Departure</strong></td>
+                        <td>{{.ScheduledDeparture}}</td>
+                    </tr>
+
+                    <tr>
+                        <td><strong>Scheduled Arrival</strong></td>
+                        <td>{{.ScheduledArrival}}</td>
+                    </tr>
+
+                    <tr>
+                        <td><strong>Operating/Marketing Airline</strong></td>
+                        <td>{{.OperatingAirlineCode}}/{{.MarketingAirlineCode}}</td>
+                    </tr>
+
+                    <tr>
+                        <td><strong>Current Action Code</strong></td>
+                        <td>{{.CurrentActionCode}}</td>
+                    </tr>
+
+                    <tr>
+                        <td><strong>Previous Action Code</strong></td>
+                        <td>{{.PreviousActionCode}}</td>
+                    </tr>
+
+                    <tr>
+                        <td><strong>Class of Service</strong></td>
+                        <td>{{.ClassOfService}} ({{.Cabin}})</td>
+                    </tr>
+
+                    <tr>
+                        <td><strong>Fare Basis</strong></td>
+                        <td>{{.FareBasis}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        {{end}}
+      </div>
+      <div class="col">
+        <h3>Passengers</h3>
+        {{range .PNR.Passengers}}
+            <div class="card">
+                <div class="card-body">
+                    <h5>{{.Name}} <span class="badge bg-primary">{{.Status}}</span></h5>
+                    <table class="table table-sm">
+                        <tbody>
+                            <tr>
+                                <td><strong>IsCEO</strong></td>
+                                <td>{{.IsCEO}}</td>
+                            </tr>
+
+                            <tr>
+                                <td><strong>IsInfiniteElite</strong></td>
+                                <td>{{.IsInfiniteElite}}</td>
+                            </tr>
+
+                            <tr>
+                                <td><strong>IsLifetimeCompanion</strong></td>
+                                <td>{{.IsLifetimeCompanion}}</td>
+                            </tr>
+
+                            <tr>
+                                <td><strong>IsUnitedClubMember</strong></td>
+                                <td>{{.IsUnitedClubMember}}</td>
+                            </tr>
+
+                            <tr>
+                                <td><strong>IsPresidentialPlus</strong></td>
+                                <td>{{.IsPresidentialPlus}}</td>
+                            </tr>
+
+                            <tr>
+                                <td><strong>SharesPosition</strong></td>
+                                <td>{{.SharesPosition}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <br />
+        {{end}}
+      </div>
+    </div>
+  </div>
+{{end}}

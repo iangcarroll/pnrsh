@@ -1,0 +1,24 @@
+{{template "base" .}}
+
+{{define "main"}}
+{{if .Error}}
+<div class="alert alert-danger" role="alert">
+    <strong>Sorry, your reservation could not be retrieved at this time.</strong> This could happen for a few reasons: your reservation has been fully flown, Aeromexico has blocked our server, or your reservation hit an edge case with the parser.
+</div>
+{{end}}
+
+<h2>United</h2>
+<p>pnr.sh allows you to dive into your United reservation and see information that is not normally displayed on the website.</p>
+
+<form method="POST" action="/united">
+    <div class="mb-3">
+        <input type="text" class="form-control" id="last_name" name="last_name" placeholder="Last name">
+    </div>
+
+    <div class="mb-3">
+        <input type="text" class="form-control" id="confirmation_code" name="confirmation_code" placeholder="United confirmation number (ex. ABC4EF)">
+    </div>
+    
+    <button class="btn btn-lg btn-primary" role="submit">Retrieve Reservation</button>
+</form><br />
+{{end}}

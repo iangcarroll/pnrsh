@@ -1,0 +1,172 @@
+{{template "base" .}}
+
+{{define "main"}}
+<div class="container">
+    <h2>Confirmation #{{.ConfirmationCode}}</h2>
+    <ul class="nav nav-pills">
+        <li class="nav-item">
+          <a class="nav-link" style="color: black">Tools</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" href="{{.PNR.SMCalcLink}}" target="_blank">Calculate Earnings</a>
+        </li>
+    </ul>      
+    <hr />
+
+    <div class="row">
+      <div class="col">
+        <h3>Flights</h3>
+        {{range .PNR.Flights}}
+            <h5><strong>{{.MarketingAirlineCode}}{{.FlightNumber}}</strong> {{.OriginAirportCode}} ✈️ {{.DestinationAirportCode}} <span class="badge bg-primary">{{.CurrentActionCode}}</span></h5>
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <td><strong>Status</strong></td>
+                        <td>{{.Status}}</td>
+                    </tr>
+
+                    <tr>
+                        <td><strong>Scheduled Departure</strong></td>
+                        <td>{{.ScheduledDeparture}}</td>
+                    </tr>
+
+                    <tr>
+                        <td><strong>Scheduled Arrival</strong></td>
+                        <td>{{.ScheduledArrival}}</td>
+                    </tr>
+
+                    <tr>
+                        <td><strong>Operating/Marketing Airline</strong></td>
+                        <td>{{.OperatingAirlineCode}}/{{.MarketingAirlineCode}}</td>
+                    </tr>
+
+                    <tr>
+                        <td><strong>Current Action Code</strong></td>
+                        <td>{{.CurrentActionCode}}</td>
+                    </tr>
+
+                    <tr>
+                        <td><strong>Class of Service</strong></td>
+                        <td>{{.ClassOfService}} ({{.Cabin}})</td>
+                    </tr>
+
+                    <tr>
+                        <td><strong>Fare Type</strong></td>
+                        <td>{{.FareName}}</td>
+                    </tr>
+
+                    <tr>
+                        <td><strong>Fare Basis</strong></td>
+                        <td>{{.FareBasis}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        {{end}}
+
+        <h3>Passengers</h3>
+        {{range .PNR.Passengers}}
+            <div class="card">
+                <div class="card-body">
+                    <h5>{{.Name}} <span class="badge bg-primary">{{.Status}}</span></h5>
+                    <table class="table table-sm">
+                        <tbody>
+                            <tr>
+                                <td><strong>Overbooking Eligible</strong></td>
+                                <td>{{.OverbookingEligible}}</td>
+                            </tr>
+
+                            <tr>
+                                <td><strong>SkyPriority</strong></td>
+                                <td>{{.SkyPriority}}</td>
+                            </tr>
+
+                            <tr>
+                                <td><strong>BenefitCodes</strong></td>
+                                <td>{{.BenefitCodes}}</td>
+                            </tr>
+
+                            <tr>
+                                <td><strong>FeeForSeatSelection</strong></td>
+                                <td>{{.FeeForSeatSelection}}</td>
+                            </tr>
+
+                            <tr>
+                                <td><strong>FeeForAmPlusUpgrade</strong></td>
+                                <td>{{.FeeForAmPlusUpgrade}}</td>
+                            </tr>
+
+                            <tr>
+                                <td><strong>FeeForPreferredUpgrade</strong></td>
+                                <td>{{.FeeForPreferredUpgrade}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <br />
+        {{end}}
+      </div>
+      <div class="col">
+        <h3>Remarks</h3>
+        <table class="table">
+            <tbody>
+            {{range .PNR.Remarks}}
+                <tr>
+                    <td><strong>{{.RemarkType}}</strong></td>
+                    <td>{{.FreeFormText}}</td>
+                </tr>
+            {{end}}
+            </tbody>
+        </table>
+
+        <h3>Tickets</h3>
+        {{range .PNR.Tickets}}
+        <div class="card">
+            <div class="card-body">
+                <h4>{{.Number}} (Coupon #{{.CouponNumber}})</h4>
+
+                <table class="table">
+                    <tbody>
+                        <tr>
+                            <td><strong>Passenger</strong></td>
+                            <td>{{.PassengerName}}</td>
+                        </tr>
+
+                        <tr>
+                            <td><strong>Origin/Destination</strong></td>
+                            <td>{{.OriginDestination}}</td>
+                        </tr>
+
+                        <tr>
+                            <td><strong>Status</strong></td>
+                            <td>{{.Status}}</td>
+                        </tr>
+
+                        <tr>
+                            <td><strong>Total Cost</strong></td>
+                            <td>${{.TotalCost}}</td>
+                        </tr>
+
+                        {{if .PreviousStatus}}
+                        <tr>
+                            <td><strong>Previous Status</strong></td>
+                            <td>{{.PreviousStatus}}</td>
+                        </tr>
+                        {{end}}
+
+                        {{if .RelatedDocumentNumber}}
+                        <tr>
+                            <td><strong>Related Document</strong></td>
+                            <td>{{.RelatedDocumentNumber}}</td>
+                        </tr>
+                        {{end}}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <br />
+        {{end}}
+      </div>
+    </div>
+  </div>
+{{end}}
