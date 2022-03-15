@@ -6,7 +6,6 @@ import (
 	aeromexico "github.com/pnrsh/pnrsh/pkg/aeromexico/pnr"
 	delta "github.com/pnrsh/pnrsh/pkg/delta/pnr"
 	united "github.com/pnrsh/pnrsh/pkg/united/pnr"
-	virgin "github.com/pnrsh/pnrsh/pkg/virgin/pnr"
 )
 
 func DeltaRetrieveHandler(w http.ResponseWriter, r *http.Request) {
@@ -26,7 +25,7 @@ func DeltaRetrieveHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	retrievedPNR, err := delta.Retrieve(firstName, lastName, confirmationCode)
+	retrievedPNR, err := delta.Retrieve(delta.DeltaEndpoint, firstName, lastName, confirmationCode)
 	if err != nil {
 		w.Header().Add("Location", "/delta?error=t")
 		w.WriteHeader(302)
@@ -135,7 +134,7 @@ func VirginRetrieveHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	retrievedPNR, err := virgin.Retrieve(firstName, lastName, confirmationCode)
+	retrievedPNR, err := delta.Retrieve(delta.VirginAtlanticEndpoint, firstName, lastName, confirmationCode)
 	if err != nil {
 		w.Header().Add("Location", "/virgin?error=t")
 		w.WriteHeader(302)
@@ -145,7 +144,7 @@ func VirginRetrieveHandler(w http.ResponseWriter, r *http.Request) {
 	t := Parse("virgin-show.html")
 
 	t.Execute(w, struct {
-		PNR              virgin.PNR
+		PNR              delta.PNR
 		ConfirmationCode string
 		CommitHash       string
 	}{

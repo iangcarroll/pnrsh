@@ -12,8 +12,9 @@ import (
 )
 
 const (
-	reqEndpoint = `https://api.delta.com/api2/mobile/getPnr`
-	reqBody     = `<retrievePnrRequest><confirmationNumber>{conf}</confirmationNumber><disableMerchandiseSearch>false</disableMerchandiseSearch><firstName>{fname}</firstName><isCheckForUpsell>Y</isCheckForUpsell><lastName>{lname}</lastName><requestInfo><appId>mobile</appId><applicationVersion>5.14</applicationVersion><buildNumber>19902</buildNumber><channel></channel><channelId>mobile</channelId><deviceName>IPHONE</deviceName><deviceType>2x</deviceType><osName>iOS</osName><osVersion>15.3</osVersion><responseType>xml</responseType><transactionId></transactionId></requestInfo><retrieveBy>confirmationNumber</retrieveBy><vacationsSearch>true</vacationsSearch></retrievePnrRequest>`
+	DeltaEndpoint          = `https://api.delta.com/api2/mobile/getPnr`
+	VirginAtlanticEndpoint = `https://api.virginatlantic.com/api2/mobile/getPnr`
+	reqBody                = `<retrievePnrRequest><confirmationNumber>{conf}</confirmationNumber><disableMerchandiseSearch>false</disableMerchandiseSearch><firstName>{fname}</firstName><isCheckForUpsell>Y</isCheckForUpsell><lastName>{lname}</lastName><requestInfo><appId>mobile</appId><applicationVersion>5.14</applicationVersion><buildNumber>19902</buildNumber><channel></channel><channelId>mobile</channelId><deviceName>IPHONE</deviceName><deviceType>2x</deviceType><osName>iOS</osName><osVersion>15.3</osVersion><responseType>xml</responseType><transactionId></transactionId></requestInfo><retrieveBy>confirmationNumber</retrieveBy><vacationsSearch>true</vacationsSearch></retrievePnrRequest>`
 )
 
 var (
@@ -47,10 +48,10 @@ func setRequestHeaders(r *http.Request) {
 	}
 }
 
-func sendRequest(firstName string, lastName string, confirmationCode string) ([]byte, error) {
+func sendRequest(apiServer string, firstName string, lastName string, confirmationCode string) ([]byte, error) {
 	body := generateRequestBody(firstName, lastName, confirmationCode)
 
-	req, err := http.NewRequest("POST", reqEndpoint, strings.NewReader(body))
+	req, err := http.NewRequest("POST", apiServer, strings.NewReader(body))
 	if err != nil {
 		return []byte{}, err
 	}
@@ -72,8 +73,8 @@ func sendRequest(firstName string, lastName string, confirmationCode string) ([]
 	return ioutil.ReadAll(res.Body)
 }
 
-func performRequest(firstName string, lastName string, confirmationCode string) (res RetrievePnrResponse, err error) {
-	data, err := sendRequest(firstName, lastName, confirmationCode)
+func performRequest(apiServer string, firstName string, lastName string, confirmationCode string) (res RetrievePnrResponse, err error) {
+	data, err := sendRequest(apiServer, firstName, lastName, confirmationCode)
 	if err != nil {
 		return res, err
 	}
