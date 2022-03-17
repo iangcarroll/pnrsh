@@ -1,4 +1,6 @@
 ## pnr.sh
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
+
 [pnr.sh](https://pnr.sh) is a tool for viewing hidden metadata on airline reservations, written in Go. It is fast and lightweight, stores no data, and displays useful data that would otherwise not be visible.
 
 ![pnr.sh demo image](.github/screenshot.png)
