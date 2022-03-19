@@ -27,7 +27,7 @@ func listenAddress() string {
 		return "0.0.0.0:" + port
 	}
 
-	return "127.0.0.1:8080"
+	return "0.0.0.0:8080"
 }
 
 func main() {
