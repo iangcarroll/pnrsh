@@ -13,7 +13,7 @@ import (
 
 const (
 	aeromexicoEnabled = true
-	deltaEnabled      = true
+	deltaEnabled      = false
 	unitedEnabled     = true
 	virginEnabled     = true
 )
