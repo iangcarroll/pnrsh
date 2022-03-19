@@ -17,3 +17,7 @@ pnr.sh uses normal and public APIs to obtain reservation information that is alr
 
 
 pnr.sh is open-source and freely licensed under the MIT license.
+
+## Building with Docker
+
+A `Dockerfile` is included for easily building and deploying `pnr.sh`. By default, it will listen on `0.0.0.0:8080`. This can be overridden by changing the `PORT` environment variable. 
