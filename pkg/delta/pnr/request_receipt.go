@@ -32,7 +32,7 @@ var (
 	}
 )
 
-func generateReceiptRequestBody(firstName string, lastName string, confirmationCode string) string {
+func generateReceiptRequestBody(firstName, lastName, confirmationCode string) string {
 	body := receiptReqBody
 	body = strings.Replace(body, "{fname}", firstName, -1)
 	body = strings.Replace(body, "{lname}", lastName, -1)
@@ -46,7 +46,7 @@ func setReceiptRequestHeaders(r *http.Request) {
 	}
 }
 
-func sendReceiptRequest(firstName string, lastName string, confirmationCode string) ([]byte, error) {
+func sendReceiptRequest(firstName, lastName, confirmationCode string) ([]byte, error) {
 	body := generateReceiptRequestBody(firstName, lastName, confirmationCode)
 
 	req, err := http.NewRequest("POST", receiptEndpoint, strings.NewReader(body))
@@ -65,7 +65,7 @@ func sendReceiptRequest(firstName string, lastName string, confirmationCode stri
 	return ioutil.ReadAll(res.Body)
 }
 
-func performReceiptRequest(firstName string, lastName string, confirmationCode string) (res ReceiptResponse, err error) {
+func performReceiptRequest(firstName, lastName, confirmationCode string) (res ReceiptResponse, err error) {
 	data, err := sendReceiptRequest(firstName, lastName, confirmationCode)
 	if err != nil {
 		return res, err

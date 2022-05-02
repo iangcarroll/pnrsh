@@ -1,6 +1,6 @@
 package pnr
 
-func Retrieve(apiServer string, firstName string, lastName string, confirmationCode string) (PNR, error) {
+func Retrieve(apiServer, firstName, lastName, confirmationCode string) (PNR, error) {
 	res, err := performRequest(apiServer, firstName, lastName, confirmationCode)
 	if err != nil {
 		return PNR{}, err

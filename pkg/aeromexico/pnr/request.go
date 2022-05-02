@@ -24,7 +24,7 @@ var (
 	client = http.Client{}
 )
 
-func generateAuthHeader(lastName string, confirmationCode string) string {
+func generateAuthHeader(lastName, confirmationCode string) string {
 	return fmt.Sprintf(`PNR name="%s",reservation="%s"`, lastName, confirmationCode)
 }
 
@@ -36,7 +36,7 @@ func setRequestHeaders(r *http.Request, lastName string, confirmationCode string
 	r.Header.Set(`x-am-user-auth`, generateAuthHeader(lastName, confirmationCode))
 }
 
-func sendRequest(lastName string, confirmationCode string) ([]byte, error) {
+func sendRequest(lastName, confirmationCode string) ([]byte, error) {
 	req, err := http.NewRequest("GET", reqEndpoint, nil)
 	if err != nil {
 		return []byte{}, err
@@ -53,7 +53,7 @@ func sendRequest(lastName string, confirmationCode string) ([]byte, error) {
 	return ioutil.ReadAll(res.Body)
 }
 
-func performRequest(lastName string, confirmationCode string) (res ManagePnrResponse, err error) {
+func performRequest(lastName, confirmationCode string) (res ManagePnrResponse, err error) {
 	data, err := sendRequest(lastName, confirmationCode)
 	if err != nil {
 		return res, err

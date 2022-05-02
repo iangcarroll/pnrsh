@@ -24,7 +24,7 @@ var (
 	client = http.Client{}
 )
 
-func generateReqBody(lastName string, confirmationCode string) string {
+func generateReqBody(lastName, confirmationCode string) string {
 	body := reqBody
 	body = strings.Replace(body, "{conf}", confirmationCode, -1)
 	body = strings.Replace(body, "{lname}", lastName, -1)
@@ -37,7 +37,7 @@ func setRequestHeaders(r *http.Request) {
 	}
 }
 
-func sendRequest(lastName string, confirmationCode string) ([]byte, error) {
+func sendRequest(lastName, confirmationCode string) ([]byte, error) {
 	req, err := http.NewRequest("POST", reqEndpoint, strings.NewReader(generateReqBody(lastName, confirmationCode)))
 	if err != nil {
 		return []byte{}, err

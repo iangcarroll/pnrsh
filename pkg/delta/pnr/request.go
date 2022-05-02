@@ -35,7 +35,7 @@ var (
 	client = http.Client{}
 )
 
-func generateRequestBody(firstName string, lastName string, confirmationCode string) string {
+func generateRequestBody(firstName, lastName, confirmationCode string) string {
 	body := reqBody
 	body = strings.Replace(body, "{fname}", firstName, -1)
 	body = strings.Replace(body, "{lname}", lastName, -1)
@@ -49,7 +49,7 @@ func setRequestHeaders(r *http.Request) {
 	}
 }
 
-func sendRequest(apiServer string, firstName string, lastName string, confirmationCode string) ([]byte, error) {
+func sendRequest(apiServer, firstName, lastName, confirmationCode string) ([]byte, error) {
 	body := generateRequestBody(firstName, lastName, confirmationCode)
 
 	req, err := http.NewRequest("POST", apiServer, strings.NewReader(body))
@@ -74,7 +74,7 @@ func sendRequest(apiServer string, firstName string, lastName string, confirmati
 	return ioutil.ReadAll(res.Body)
 }
 
-func performRequest(apiServer string, firstName, lastName, confirmationCode string) (res RetrievePnrResponse, err error) {
+func performRequest(apiServer, firstName, lastName, confirmationCode string) (res RetrievePnrResponse, err error) {
 	data, err := sendRequest(apiServer, firstName, lastName, confirmationCode)
 	if err != nil {
 		return res, err
