@@ -6,5 +6,5 @@ func Retrieve(apiServer string, firstName string, lastName string, confirmationC
 		return PNR{}, err
 	}
 
-	return convertResponse(res), nil
+	return convertResponse(res, firstName, lastName, confirmationCode), nil
 }

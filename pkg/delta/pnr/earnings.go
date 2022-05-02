@@ -99,5 +99,5 @@ func generateSmcalcRoute(pnr *PNR) (out string) {
 
 func generateSmcalcLink(pnr *PNR) string {
 	route := generateSmcalcRoute(pnr)
-	return fmt.Sprintf("https://fly.qux.us/smcalc/dist.php?route=%s&start_mqm=0&start_rdm=0&default_fare=T&default_carrier=DL&elite=%s", url.QueryEscape(route), generateSmcalcStatus(pnr))
+	return fmt.Sprintf("https://skymilescalculator.com/dist.php?route=%s&start_mqm=0&start_rdm=0&default_fare=T&default_carrier=DL&elite=%s", url.QueryEscape(route), generateSmcalcStatus(pnr))
 }

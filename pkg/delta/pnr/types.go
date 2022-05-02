@@ -3,12 +3,14 @@ package pnr
 import "encoding/xml"
 
 type PNR struct {
-	Remarks    []Remark
-	Flights    []Flight
-	Passengers []Passenger
-	Flags      []Flag
-	Tickets    []Ticket
-	Fare       Fare
+	Remarks         []Remark
+	Flights         []Flight
+	Passengers      []Passenger
+	Flags           []Flag
+	Tickets         []Ticket
+	Fare            Fare
+	ReissueRequired bool
+	CheckedIn       bool
 }
 
 type Remark struct {
@@ -80,6 +82,7 @@ type Fare struct {
 
 // Raw API response from Delta.
 type RetrievePnrResponse struct {
+	receiptResponse           *ReceiptResponse
 	XMLName                   xml.Name `xml:"retrievePnrResponse"`
 	Text                      string   `xml:",chardata"`
 	Ns2                       string   `xml:"ns2,attr"`
@@ -869,4 +872,102 @@ type RetrievePnrResponse struct {
 			Vacation string `xml:"vacation"`
 		} `xml:"Journey"`
 	} `xml:"tripsResponse"`
+}
+
+type ReceiptResponse struct {
+	ReceiptType string `json:"receiptType"`
+	PurchasedOn string `json:"purchasedOn"`
+	Total       struct {
+		Amount         float64 `json:"amount"`
+		CurrencySymbol string  `json:"currencySymbol"`
+		CurrencyCode   string  `json:"currencyCode"`
+	} `json:"total"`
+	Origin      string `json:"origin"`
+	Destination string `json:"destination"`
+	Pnr         string `json:"pnr"`
+	Passengers  []struct {
+		SkyMilesNumber string `json:"skyMilesNumber"`
+		Name           string `json:"name"`
+		Ticket         struct {
+			TicketCoupons []struct {
+				CouponNumber string `json:"couponNumber"`
+				Flight       struct {
+					FlightNumber  string `json:"flightNumber"`
+					Origin        string `json:"origin"`
+					Destination   string `json:"destination"`
+					DepartureDate string `json:"departureDate"`
+					FlightStatus  string `json:"flightStatus"`
+					Cabin         string `json:"cabin"`
+				} `json:"flight"`
+			} `json:"ticketCoupons"`
+			Fare struct {
+				Base struct {
+					Amount         float64 `json:"amount"`
+					CurrencySymbol string  `json:"currencySymbol"`
+					CurrencyCode   string  `json:"currencyCode"`
+				} `json:"base"`
+				TotalTax struct {
+					Amount         float64 `json:"amount"`
+					CurrencySymbol string  `json:"currencySymbol"`
+					CurrencyCode   string  `json:"currencyCode"`
+				} `json:"totalTax"`
+				TotalAmount struct {
+					Amount         float64 `json:"amount"`
+					CurrencySymbol string  `json:"currencySymbol"`
+					CurrencyCode   string  `json:"currencyCode"`
+				} `json:"totalAmount"`
+				TaxBreakdownList []struct {
+					AmountType string `json:"amountType"`
+					TaxAmount  struct {
+						Amount         float64 `json:"amount"`
+						CurrencySymbol string  `json:"currencySymbol"`
+						CurrencyCode   string  `json:"currencyCode"`
+					} `json:"taxAmount"`
+				} `json:"taxBreakdownList"`
+			} `json:"fare"`
+			MilesPlusCash interface{} `json:"milesPlusCash"`
+			ReissueFare   struct {
+				Type string `json:"type"`
+				Base struct {
+					Amount         float64 `json:"amount"`
+					CurrencySymbol string  `json:"currencySymbol"`
+					CurrencyCode   string  `json:"currencyCode"`
+				} `json:"base"`
+				TotalTax struct {
+					Amount         float64 `json:"amount"`
+					CurrencySymbol string  `json:"currencySymbol"`
+					CurrencyCode   string  `json:"currencyCode"`
+				} `json:"totalTax"`
+				TotalAmount struct {
+					Amount         float64 `json:"amount"`
+					CurrencySymbol string  `json:"currencySymbol"`
+					CurrencyCode   string  `json:"currencyCode"`
+				} `json:"totalAmount"`
+				ServiceCharge struct {
+					Amount         float64 `json:"amount"`
+					CurrencySymbol string  `json:"currencySymbol"`
+					CurrencyCode   string  `json:"currencyCode"`
+				} `json:"serviceCharge"`
+				MileageDifference int `json:"mileageDifference"`
+			} `json:"reissueFare"`
+			ShopType       string `json:"shopType"`
+			DocumentNumber string `json:"documentNumber"`
+		} `json:"ticket"`
+		Total struct {
+			Amount         float64 `json:"amount"`
+			CurrencySymbol string  `json:"currencySymbol"`
+			CurrencyCode   string  `json:"currencyCode"`
+		} `json:"total"`
+	} `json:"passengers"`
+	FormOfPayment struct {
+		Type                string `json:"type"`
+		AccountNumberEnding string `json:"accountNumberEnding"`
+		IsBillMeLater       bool   `json:"isBillMeLater"`
+	} `json:"formOfPayment"`
+	Links []struct {
+		Rel      string `json:"rel"`
+		Href     string `json:"href"`
+		PostData struct {
+		} `json:"postData"`
+	} `json:"links"`
 }

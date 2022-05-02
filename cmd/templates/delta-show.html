@@ -3,6 +3,13 @@
 {{define "main"}}
 <div class="container">
     <h2>Confirmation #{{.ConfirmationCode}}</h2>
+
+    {{ if .PNR.ReissueRequired }}
+    <div class="alert alert-warning" role="alert">
+        <strong>The tickets attached to your reservation have a different fare class than the segments in your reservation.</strong> If your departure date is approaching, this will likely prevent you from checking in, but you can contact Delta to request an immediate reissue of your ticket.
+    </div>
+    {{ end }}
+      
     <ul class="nav nav-pills">
         <li class="nav-item">
           <a class="nav-link" style="color: black">Tools</a>
@@ -10,7 +17,7 @@
         <li class="nav-item">
           <a class="nav-link active" href="{{.PNR.Fare.SMCalcLink}}" target="_blank">Calculate Earnings</a>
         </li>
-    </ul>      
+    </ul>
     <hr />
 
     <div class="row">

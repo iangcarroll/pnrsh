@@ -7,6 +7,11 @@ var (
 		"YQ": true,
 		"YR": true,
 	}
+
+	reissueNotRequired = map[string]bool{
+		"OU": true,
+		"SU": true,
+	}
 )
 
 func convertRemarks(res RetrievePnrResponse, pnr *PNR) {
@@ -47,6 +52,10 @@ func convertPassengers(res RetrievePnrResponse, pnr *PNR) {
 			CustomerID: pax.CustomerId,
 			CheckedIn:  pax.CheckedIn != "false",
 			Status:     pax.LoyaltyAccounts.DomainObjectList.DomainObject.MembershipStatusCd,
+		}
+
+		if convertedPax.CheckedIn {
+			pnr.CheckedIn = true
 		}
 
 		for _, ssr := range pax.Ssrs.DomainObjectList.DomainObject {
@@ -123,4 +132,27 @@ func convertFare(res RetrievePnrResponse, pnr *PNR) {
 	pnr.Fare = convertedFare
 	pnr.Fare.EstimatedMQD = estimateMQD(pnr)
 	pnr.Fare.SMCalcLink = generateSmcalcLink(pnr)
+}
+
+func convertReceiptResponse(res RetrievePnrResponse, pnr *PNR) {
+	// Likely not relevant when checked in.
+	if pnr.CheckedIn {
+		return
+	}
+
+	for _, pax := range res.receiptResponse.Passengers {
+		for _, coupon := range pax.Ticket.TicketCoupons {
+			for _, flight := range pnr.Flights {
+				if coupon.Flight.FlightNumber != flight.MarketingAirlineCode+flight.FlightNumber {
+					continue
+				}
+
+				// This is a problem only if the fare classes mismatch AND the PNR is using a fare class
+				// that would normally require a reissue (i.e. OY). OU/SU do not need reissue.
+				if coupon.Flight.Cabin != flight.ClassOfService && !reissueNotRequired[flight.ClassOfService] {
+					pnr.ReissueRequired = true
+				}
+			}
+		}
+	}
 }

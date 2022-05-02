@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"os"
 	"strings"
+	"sync"
 	"time"
 )
 
@@ -73,7 +74,7 @@ func sendRequest(apiServer string, firstName string, lastName string, confirmati
 	return ioutil.ReadAll(res.Body)
 }
 
-func performRequest(apiServer string, firstName string, lastName string, confirmationCode string) (res RetrievePnrResponse, err error) {
+func performRequest(apiServer string, firstName, lastName, confirmationCode string) (res RetrievePnrResponse, err error) {
 	data, err := sendRequest(apiServer, firstName, lastName, confirmationCode)
 	if err != nil {
 		return res, err
@@ -90,13 +91,34 @@ func performRequest(apiServer string, firstName string, lastName string, confirm
 	return res, nil
 }
 
-func convertResponse(res RetrievePnrResponse) (pnr PNR) {
+func convertResponse(res RetrievePnrResponse, firstName, lastName, confirmationCode string) (pnr PNR) {
+	var wg sync.WaitGroup
+	wg.Add(1)
+
+	// Kick off the receipt request async while we do the other processing.
+	go func() {
+		defer wg.Done()
+
+		receiptRes, err := performReceiptRequest(firstName, lastName, confirmationCode)
+		if err == nil {
+			res.receiptResponse = &receiptRes
+		} else {
+			log.Println("Got an error retrieving receipts")
+		}
+	}()
+
 	convertRemarks(res, &pnr)
 	convertFlights(res, &pnr)
 	convertPassengers(res, &pnr)
 	convertFlags(res, &pnr)
 	convertTickets(res, &pnr)
 	convertFare(res, &pnr)
+
+	// Wait for the receipt request and process it if we succeeded.
+	wg.Wait()
+	if res.receiptResponse != nil {
+		convertReceiptResponse(res, &pnr)
+	}
 
 	return pnr
 }
