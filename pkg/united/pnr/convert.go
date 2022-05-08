@@ -60,3 +60,14 @@ func convertTickets(res GetPNRResponse, pnr *PNR) {
 		}
 	}
 }
+
+func convertSsrs(res GetPNRResponse, pnr *PNR) {
+	for _, service := range res.Detail.Services {
+		pnr.SSRs = append(pnr.SSRs, SSR{
+			Comments:    service.Comments,
+			Code:        service.Code,
+			Key:         service.Key,
+			Description: service.Description,
+		})
+	}
+}

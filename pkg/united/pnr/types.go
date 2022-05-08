@@ -7,6 +7,7 @@ type PNR struct {
 	Passengers []Passenger
 	Tickets    []Ticket
 	Remarks    []Remark
+	SSRs       []SSR
 	SMCalcLink string
 }
 
@@ -34,6 +35,13 @@ type Remark struct {
 type Passenger struct {
 	Name   string
 	Status string
+}
+
+type SSR struct {
+	Key         string
+	Code        string
+	Description string
+	Comments    string
 }
 
 type Ticket struct {

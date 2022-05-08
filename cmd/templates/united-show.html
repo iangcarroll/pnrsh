@@ -90,6 +90,24 @@
             </div>
             <br />
         {{end}}
+
+        <h5>SSRs</h5>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Code</td>
+                    <th scope="col">Description</td>
+                </tr>
+            </thead>
+            <tbody>
+            {{range .PNR.SSRs}}
+                <tr>
+                    <td><strong>{{.Code}}</strong></td>
+                    <td>{{.Description}}</td>
+                </tr>
+            {{end}}
+            </tbody>
+        </table>            
       </div>
       <div class="col">
         <h3>Remarks</h3>

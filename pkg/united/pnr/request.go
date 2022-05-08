@@ -88,6 +88,7 @@ func convertResponse(res GetPNRResponse) (pnr PNR) {
 	convertPassengers(res, &pnr)
 	convertRemarks(res, &pnr)
 	convertTickets(res, &pnr)
+	convertSsrs(res, &pnr)
 
 	return pnr
 }
