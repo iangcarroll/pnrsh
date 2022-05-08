@@ -5,14 +5,14 @@ import (
 	"errors"
 	"io/ioutil"
 	"net/http"
-	"os"
 	"strings"
 )
 
 const (
-	reqEndpoint      = `https://www.united.com/api/myTrips/lookup`
-	reqBody          = `{"confirmationNumber":"{conf}","lastName":"{lname}","mpUserName":"","region":"US","isDecryptNeeded":false,"encryptedTripDetails":"","partnerCode":null}`
-	defaultAuthToken = `xvt5PZjkBYc716K2zwbB97wizAgIw5HBM9L6nx2zxa4qwHrSgJnxqArFSy4f76GHUD+W1/Z4BX3C7/zV+6Fb8qejhpjotgHDdLi19axZDjojnrdA7AsT5C2VYvahyRWhv/2IRTewO7JyDVSYG3e4fXNR0//tS0B3OvbGJXu+4RlM8S7ujCjAzR8x+2chkhir`
+	reqEndpoint = `https://www.united.com/api/myTrips/lookup`
+	reqBody     = `{"confirmationNumber":"{conf}","lastName":"{lname}","mpUserName":"","region":"US","isDecryptNeeded":false,"encryptedTripDetails":"","partnerCode":null}`
+
+	userAgent = `Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.54 Safari/537.36`
 )
 
 var (
@@ -23,19 +23,11 @@ var (
 		"DNT":             "1",
 		"Origin":          "https://www.united.com",
 		"Referer":         "https://www.united.com/en/us/awardaccelerator",
-		"User-Agent":      "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.54 Safari/537.36",
+		"User-Agent":      userAgent,
 	}
 
 	client = http.Client{}
 )
-
-func getAuthToken() string {
-	if token := os.Getenv("UNITED_AUTH_TOKEN"); token != "" {
-		return token
-	}
-
-	return defaultAuthToken
-}
 
 func generateReqBody(lastName, confirmationCode string) string {
 	body := reqBody
@@ -44,12 +36,12 @@ func generateReqBody(lastName, confirmationCode string) string {
 	return body
 }
 
-func setRequestHeaders(r *http.Request) {
+func setRequestHeaders(r *http.Request, token string) {
 	for k, v := range requestHeaders {
 		r.Header.Set(k, v)
 	}
 
-	r.Header.Set(`x-authorization-api`, `bearer `+getAuthToken())
+	r.Header.Set(`x-authorization-api`, `bearer `+token)
 }
 
 func sendRequest(lastName, confirmationCode string) ([]byte, error) {
@@ -58,7 +50,12 @@ func sendRequest(lastName, confirmationCode string) ([]byte, error) {
 		return []byte{}, err
 	}
 
-	setRequestHeaders(req)
+	token, err := getAuthToken()
+	if err != nil {
+		return []byte{}, err
+	}
+
+	setRequestHeaders(req, token)
 	res, err := client.Do(req)
 
 	if res.StatusCode != 200 {
@@ -90,6 +87,7 @@ func convertResponse(res GetPNRResponse) (pnr PNR) {
 	convertFlights(res, &pnr)
 	convertPassengers(res, &pnr)
 	convertRemarks(res, &pnr)
+	convertTickets(res, &pnr)
 
 	return pnr
 }

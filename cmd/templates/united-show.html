@@ -44,6 +44,52 @@
                 </tbody>
             </table>
         {{end}}
+
+
+        <h3>Tickets</h3>
+        {{range .PNR.Tickets}}
+            <div class="card">
+                <div class="card-body">
+                    <h5>{{.DocumentID}}</h5>
+                    <table class="table table-sm">
+                        <tbody>
+                            <tr>
+                                <td><strong>Issue Date</strong></td>
+                                <td>{{.IssueDate}}</td>
+                            </tr>
+
+                            <tr>
+                                <td><strong>Expiration Date</strong></td>
+                                <td>{{.TicketValidityDate}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h5>Coupons</h5>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Status</td>
+                                <th scope="col">Flight #</td>
+                                <th scope="col">Origin</td>
+                                <th scope="col">Destination</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {{range .Coupons}}
+                            <tr>
+                                <td><strong>{{.Status}}</strong></td>
+                                <td>{{.OperatingAirlineCode}} {{.FlightNumber}}</td>
+                                <td>{{.DepartureAirport}}</td>
+                                <td>{{.ArrivalAirport}}</td>
+                            </tr>
+                        {{end}}
+                        </tbody>
+                    </table>            
+                </div>
+            </div>
+            <br />
+        {{end}}
       </div>
       <div class="col">
         <h3>Remarks</h3>

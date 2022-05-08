@@ -11,7 +11,7 @@ func convertFlights(res GetPNRResponse, pnr *PNR) {
 			ClassOfService:         segment.BookingClass.Cabin.Name,
 			ScheduledDeparture:     segment.FlightSegment.DepartureDateTime,
 			ScheduledArrival:       segment.FlightSegment.ArrivalDateTime,
-			Cabin:                  segment.BookingClass.Cabin.Name,
+			Cabin:                  segment.BookingClass.Code,
 			// TODO: Probably unsafe to assert there is an entry here.
 			MarketingAirlineCode: segment.FlightSegment.MarketedFlightSegment[0].MarketingAirlineCode,
 		})
@@ -33,5 +33,30 @@ func convertRemarks(res GetPNRResponse, pnr *PNR) {
 			Description:     rmk.Description,
 			DisplaySequence: rmk.DisplaySequence,
 		})
+	}
+}
+
+func convertTickets(res GetPNRResponse, pnr *PNR) {
+	for _, pax := range res.Detail.Travelers {
+		for _, tkt := range pax.Tickets {
+			formattedTicket := Ticket{
+				DocumentID:         tkt.DocumentID,
+				IssueDate:          tkt.IssueDate,
+				TicketValidityDate: tkt.TicketValidityDate,
+				Coupons:            []Coupon{},
+			}
+
+			for _, coupon := range tkt.FlightCoupons {
+				formattedTicket.Coupons = append(formattedTicket.Coupons, Coupon{
+					Status:               coupon.Status.Code,
+					DepartureAirport:     coupon.FlightSegment.DepartureAirport.IATACode,
+					ArrivalAirport:       coupon.FlightSegment.ArrivalAirport.IATACode,
+					FlightNumber:         coupon.FlightSegment.FlightNumber,
+					OperatingAirlineCode: coupon.FlightSegment.OperatingAirlineCode,
+				})
+			}
+
+			pnr.Tickets = append(pnr.Tickets, formattedTicket)
+		}
 	}
 }

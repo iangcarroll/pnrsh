@@ -1,5 +1,7 @@
 package pnr
 
+import "time"
+
 type PNR struct {
 	Flights    []Flight
 	Passengers []Passenger
@@ -34,21 +36,19 @@ type Passenger struct {
 	Status string
 }
 
-type SSR struct {
-	AirlineCode string
-	Type        string
-	Remark      string
+type Ticket struct {
+	DocumentID         string
+	IssueDate          string
+	TicketValidityDate string
+	Coupons            []Coupon
 }
 
-type Ticket struct {
-	Number                string
-	CouponNumber          string
-	Status                string
-	PreviousStatus        string
-	PassengerName         string
-	RelatedDocumentNumber string
-	OriginDestination     string
-	TotalCost             string
+type Coupon struct {
+	Status               string
+	DepartureAirport     string
+	ArrivalAirport       string
+	FlightNumber         string
+	OperatingAirlineCode string
 }
 
 type GetPNRResponse struct {
@@ -803,4 +803,15 @@ type GetPNRResponse struct {
 	} `json:"PNRChangeEligibility"`
 	IsOfferCallNeeded         string `json:"IsOfferCallNeeded"`
 	IsTripInsuranceCallNeeded bool   `json:"IsTripInsuranceCallNeeded"`
+}
+
+type TokenResponse struct {
+	Data struct {
+		Token struct {
+			Hash      string    `json:"hash"`
+			ExpiresAt time.Time `json:"expiresAt"`
+		} `json:"token"`
+	} `json:"data"`
+	Valid           interface{} `json:"valid"`
+	TokenExpiration interface{} `json:"TokenExpiration"`
 }
