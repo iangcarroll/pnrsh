@@ -13,6 +13,14 @@ import (
 var (
 	tokenErrorCount     uint64
 	tokenErrorThreshold = uint64(2)
+
+	tokenRequestHeaders = map[string]string{
+		"accept":          "application/json",
+		"accept-language": "en-US",
+		"dnt":             "1",
+		"referer":         "https://www.united.com/en/us",
+		"user-agent":      userAgent,
+	}
 )
 
 func getAuthToken() (string, error) {
@@ -21,7 +29,10 @@ func getAuthToken() (string, error) {
 		return "", errors.New("could not build token request")
 	}
 
-	req.Header.Set(`User-Agent`, userAgent)
+	for k, v := range tokenRequestHeaders {
+		req.Header.Set(k, v)
+	}
+
 	res, err := client.Do(req)
 
 	if err != nil {
