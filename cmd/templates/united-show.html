@@ -38,24 +38,33 @@
                     </tr>
 
                     <tr>
-                        <td><strong>Previous Action Code</strong></td>
-                        <td>{{.PreviousActionCode}}</td>
-                    </tr>
-
-                    <tr>
                         <td><strong>Class of Service</strong></td>
                         <td>{{.ClassOfService}} ({{.Cabin}})</td>
-                    </tr>
-
-                    <tr>
-                        <td><strong>Fare Basis</strong></td>
-                        <td>{{.FareBasis}}</td>
                     </tr>
                 </tbody>
             </table>
         {{end}}
       </div>
       <div class="col">
+        <h3>Remarks</h3>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Seq</td>
+                    <th scope="col">Remark</td>
+                </tr>
+            </thead>
+            <tbody>
+            {{range .PNR.Remarks}}
+                <tr>
+                    <td><strong>{{.DisplaySequence}}</strong></td>
+                    <td>{{.Description}}</td>
+                </tr>
+            {{end}}
+            </tbody>
+        </table>
+        <br />
+
         <h3>Passengers</h3>
         {{range .PNR.Passengers}}
             <div class="card">
@@ -63,35 +72,7 @@
                     <h5>{{.Name}} <span class="badge bg-primary">{{.Status}}</span></h5>
                     <table class="table table-sm">
                         <tbody>
-                            <tr>
-                                <td><strong>IsCEO</strong></td>
-                                <td>{{.IsCEO}}</td>
-                            </tr>
 
-                            <tr>
-                                <td><strong>IsInfiniteElite</strong></td>
-                                <td>{{.IsInfiniteElite}}</td>
-                            </tr>
-
-                            <tr>
-                                <td><strong>IsLifetimeCompanion</strong></td>
-                                <td>{{.IsLifetimeCompanion}}</td>
-                            </tr>
-
-                            <tr>
-                                <td><strong>IsUnitedClubMember</strong></td>
-                                <td>{{.IsUnitedClubMember}}</td>
-                            </tr>
-
-                            <tr>
-                                <td><strong>IsPresidentialPlus</strong></td>
-                                <td>{{.IsPresidentialPlus}}</td>
-                            </tr>
-
-                            <tr>
-                                <td><strong>SharesPosition</strong></td>
-                                <td>{{.SharesPosition}}</td>
-                            </tr>
                         </tbody>
                     </table>
                 </div>
