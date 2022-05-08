@@ -4,7 +4,15 @@ import (
 	"encoding/json"
 	"errors"
 	"io/ioutil"
+	"log"
 	"net/http"
+	"os"
+	"sync/atomic"
+)
+
+var (
+	tokenErrorCount     uint64
+	tokenErrorThreshold = uint64(2)
 )
 
 func getAuthToken() (string, error) {
@@ -21,6 +29,11 @@ func getAuthToken() (string, error) {
 	}
 
 	if res.StatusCode != 200 {
+		if atomic.AddUint64(&tokenErrorCount, 1) > tokenErrorThreshold {
+			log.Println("Restarting because we cannot get any more tokens")
+			os.Exit(1)
+		}
+
 		return "", errors.New("token status code not 200")
 	}
 
