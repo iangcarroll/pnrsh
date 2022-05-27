@@ -11,6 +11,11 @@
     <a href="/united" class="list-group-item list-group-item-action">United <span class="badge bg-success">Flight Segments</span> <span class="badge bg-success">Action Codes</span> <span class="badge bg-success">Remarks</span> <span class="badge bg-success">Tickets</span></a>
     <a href="/virgin" class="list-group-item list-group-item-action">Virgin Atlantic <span class="badge bg-success">Flight Segments</span> <span class="badge bg-success">Action Codes</span> <span class="badge bg-success">Remarks</span> <span class="badge bg-success">Tickets</span></a>
 </div>
-
+<br />
+{{if .CommitHash}}
+<div class="alert alert-primary" role="alert">
+    <strong>New!</strong> View award availability for Avianca LifeMiles with <a href="https://awards.pnr.sh">awards.pnr.sh</a>.
+</div>
+{{end}}
 <br />
 {{end}}
