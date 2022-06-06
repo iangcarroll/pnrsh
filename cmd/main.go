@@ -61,8 +61,8 @@ func main() {
 		Handler: r,
 		Addr:    listenAddress(),
 
-		WriteTimeout: 15 * time.Second,
-		ReadTimeout:  15 * time.Second,
+		WriteTimeout: 30 * time.Second,
+		ReadTimeout:  30 * time.Second,
 	}
 
 	r.Use(secure.New(secure.Options{
