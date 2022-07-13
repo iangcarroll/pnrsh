@@ -1,0 +1,166 @@
+{{template "base" .}}
+
+{{define "main"}}
+<div class="container">
+    <h2>Confirmation #{{.PNR.Data.BookingInfo.BookingReference}}</h2>
+
+    {{ if .PNR.Data.BookingInfo.IsDisrupted }}
+    <div class="alert alert-warning" role="alert">
+        <strong>Your trip has been disrupted</strong> You should reach out to the airline for details.
+    </div>
+    {{ end }}
+
+    <div class="row">
+      <div class="col">
+        <h3>Flights</h3>
+        {{range .PNR.Data.Bounds}}
+            <h5> {{.Origin}} ✈️ {{.Destination}} (duration {{.DurationTotal}})</h5>
+            {{range .Segments}}
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Segment # {{.Number}}</th>
+                  <th>{{.Origin}} ✈️ {{.Destination}}</th>
+                </tr>
+              </thead>
+              <tbody>
+                  <tr>
+                      <td><strong>Status</strong></td>
+                      <td>{{.Status}}</td>
+                  </tr>
+
+                  <tr>
+                      <td><strong>Scheduled Departure</strong></td>
+                      <td>{{.DepartureDateTimeLocal}}</td>
+                  </tr>
+
+                  <tr>
+                      <td><strong>Scheduled Arrival</strong></td>
+                      <td>{{.ArrivalDateTimeLocal}}</td>
+                  </tr>
+
+                  <tr>
+                      <td><strong>Duration</strong></td>
+                      <td>{{.Duration}}</td>
+                  </tr>
+
+                  <tr>
+                      <td><strong>Operating/Marketing Airline</strong></td>
+                      <td>{{.OperatingFlightInfo.CarrierCode}}/{{.MarketingFlightInfo.CarrierCode}}{{.MarketingFlightInfo.FlightNumber}}</td>
+                  </tr>
+
+                  <tr>
+                    <td><strong>Aircraft</strong></td>
+                    <td>{{.Aircraft.Name}}</td>
+                </tr>
+
+              </tbody>
+          </table>
+            {{end}}
+        {{end}}
+
+
+        <h3>Passengers</h3>
+        {{range .PNR.Data.Passengers}}
+            <div class="card">
+                <div class="card-header">
+                  <h5>{{.FirstName}} {{.MiddleName}} {{.LastName}}</h5>
+                </div>
+                <table class="table">
+                  <tbody>
+                    <tr>
+                      <td><strong>Email</strong></td>
+                      <td>fdskfdsf</td>
+                    </tr>
+                    {{ if .HasEmailAddress }}
+                    <tr>
+                      <td><strong>Email</strong></td>
+                      <td> {{.EmailAddress}}</td>
+                    </tr>
+                    {{end}}
+                    {{ if .HasPhoneNumber }}
+                    <tr>
+                      <td><strong>Phone number</strong></td>
+                      <td> {{.PhoneNumber}}</td>
+                    </tr>
+                    {{end}}
+                    {{range .TicketNumber}}
+                    <tr>
+                      <td><strong>Ticket #</strong></td>
+                      <td> {{.Number}}</td>
+                    </tr>
+                    {{end}}
+                  </tbody>
+                </table>
+            </div>
+            <br />
+        {{end}}
+  
+         
+      </div>
+      <div class="col">
+        <h3>SSRs</h3>
+        {{range .PNR.Data.SpecialServiceRequest}}
+          <div class="card">
+            <div class="card-header d-flex justify-content-between">
+              <h5>#{{.Number}} {{.Code}}</h5>
+              <h5><span class="badge bg-primary">{{.Status}}</span></h5>
+            </div>
+            
+            <table class="table">
+              <tbody>
+                {{if .Name}}
+                <tr>
+                  <td><strong>Name</strong></td>
+                  <td>{{.Name}}</td>
+                </tr>
+                {{end}}
+                {{if .Text}}
+                <tr>
+                  <td><strong>Text</strong></td>
+                  <td>{{.Text}}</td>
+                </tr>
+                {{end}}
+                {{range .Flights}}
+                <tr>
+                  <td><strong>Flight</strong></td>
+                  <td>{{.MarketingCarrierCode}}{{.MarketingFlightNumber}}</td>
+                </tr>
+                <tr>
+                  <td><strong>Passengers</strong></td>
+                  <td>{{range .Passengers}}{{.FirstName}} {{.LastName}} {{end}}</td>
+                </tr>
+                {{end}}
+              </tbody>
+            </table>
+          </div>
+        {{end}}
+        <br />
+
+     
+
+      </div>
+    </div>
+
+    <hr />
+    <div class="row">
+      <div class="col">
+        <div class="accordion" id="rawResponseAccordion">
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="rawHeading">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#rawresponse" aria-expanded="true" aria-controls="rawresponse">
+                Raw response from Air Canada
+              </button>
+            </h2>
+            <div id="rawresponse" class="accordion-collapse collapse" aria-labelledby="rawHeading" data-bs-parent="#rawResponseAccordion">
+              <div class="accordion-body">
+                <pre><code>{{.PNR.RawResponse}}</code></pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <hr />
+  </div>
+{{end}}
