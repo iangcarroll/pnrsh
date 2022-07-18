@@ -1,6 +1,5 @@
 package pnr
 
-
 func Retrieve(lastName, confirmationCode string) (PNR, error) {
 
 	res, raw, err := performRequest(lastName, confirmationCode)
@@ -8,5 +7,5 @@ func Retrieve(lastName, confirmationCode string) (PNR, error) {
 		return PNR{}, err
 	}
 
- 	return PNR{Data:res, RawResponse: string(raw)}, nil
+	return PNR{Data: res, RawResponse: string(raw)}, nil
 }

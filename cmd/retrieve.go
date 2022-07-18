@@ -4,9 +4,9 @@ import (
 	"net/http"
 
 	aeromexico "github.com/pnrsh/pnrsh/pkg/aeromexico/pnr"
+	aircanada "github.com/pnrsh/pnrsh/pkg/aircanada/pnr"
 	delta "github.com/pnrsh/pnrsh/pkg/delta/pnr"
 	united "github.com/pnrsh/pnrsh/pkg/united/pnr"
-	aircanada "github.com/pnrsh/pnrsh/pkg/aircanada/pnr"
 )
 
 func DeltaRetrieveHandler(w http.ResponseWriter, r *http.Request) {
