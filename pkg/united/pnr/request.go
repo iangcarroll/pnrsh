@@ -10,6 +10,7 @@ import (
 	"net/url"
 	"os"
 	"strings"
+	"time"
 )
 
 const (
@@ -31,9 +32,12 @@ var (
 	}
 
 	client = http.Client{
+		Timeout: time.Second * 15,
+
 		Transport: &http.Transport{
+			// When using an HTTP proxy, we need to disable TLS verification.
 			TLSClientConfig: &tls.Config{
-				InsecureSkipVerify: true,
+				InsecureSkipVerify: os.Getenv("HTTP_PROXY") != "",
 			},
 
 			Proxy: func(r *http.Request) (*url.URL, error) {
