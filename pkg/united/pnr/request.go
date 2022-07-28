@@ -1,10 +1,14 @@
 package pnr
 
 import (
+	"crypto/tls"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io/ioutil"
 	"net/http"
+	"net/url"
+	"os"
 	"strings"
 )
 
@@ -26,7 +30,21 @@ var (
 		"User-Agent":      userAgent,
 	}
 
-	client = http.Client{}
+	client = http.Client{
+		Transport: &http.Transport{
+			TLSClientConfig: &tls.Config{
+				InsecureSkipVerify: true,
+			},
+
+			Proxy: func(r *http.Request) (*url.URL, error) {
+				if p := os.Getenv("HTTP_PROXY"); p != "" {
+					return url.Parse(p)
+				}
+
+				return nil, nil
+			},
+		},
+	}
 )
 
 func generateReqBody(lastName, confirmationCode string) string {
@@ -59,7 +77,7 @@ func sendRequest(lastName, confirmationCode string) ([]byte, error) {
 	res, err := client.Do(req)
 
 	if res.StatusCode != 200 {
-		return []byte{}, errors.New("status code was not 200")
+		return []byte{}, errors.New(fmt.Sprintf("status code was %d", res.StatusCode))
 	}
 
 	defer res.Body.Close()
