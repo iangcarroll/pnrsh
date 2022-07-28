@@ -6,10 +6,12 @@ import (
 	"errors"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"net/url"
 	"os"
 	"strings"
+	"sync/atomic"
 	"time"
 )
 
@@ -49,6 +51,9 @@ var (
 			},
 		},
 	}
+
+	pnrErrorCount     uint64
+	pnrErrorThreshold = uint64(4)
 )
 
 func generateReqBody(lastName, confirmationCode string) string {
@@ -81,6 +86,11 @@ func sendRequest(lastName, confirmationCode string) ([]byte, error) {
 	res, err := client.Do(req)
 
 	if res.StatusCode != 200 {
+		if atomic.AddUint64(&pnrErrorCount, 1) > pnrErrorThreshold {
+			log.Println("Restarting because we have exceeded PNR error threshold")
+			os.Exit(1)
+		}
+
 		return []byte{}, errors.New(fmt.Sprintf("status code was %d", res.StatusCode))
 	}
 
