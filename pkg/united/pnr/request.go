@@ -4,7 +4,6 @@ import (
 	"crypto/tls"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -85,13 +84,17 @@ func sendRequest(lastName, confirmationCode string) ([]byte, error) {
 	setRequestHeaders(req, token)
 	res, err := client.Do(req)
 
-	if res.StatusCode != 200 {
+	if err != nil || res == nil || res.StatusCode != 200 {
 		if atomic.AddUint64(&pnrErrorCount, 1) > pnrErrorThreshold {
 			log.Println("Restarting because we have exceeded PNR error threshold")
 			os.Exit(1)
 		}
 
-		return []byte{}, errors.New(fmt.Sprintf("status code was %d", res.StatusCode))
+		if res != nil {
+			log.Println("status code from united:", res.StatusCode)
+		}
+
+		return []byte{}, errors.New("status code was not 200")
 	}
 
 	defer res.Body.Close()
