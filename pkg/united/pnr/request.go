@@ -1,7 +1,6 @@
 package pnr
 
 import (
-	"crypto/tls"
 	"encoding/json"
 	"errors"
 	"io/ioutil"
@@ -10,7 +9,6 @@ import (
 	"net/url"
 	"os"
 	"strings"
-	"sync/atomic"
 	"time"
 )
 
@@ -36,11 +34,6 @@ var (
 		Timeout: time.Second * 15,
 
 		Transport: &http.Transport{
-			// When using an HTTP proxy, we need to disable TLS verification.
-			TLSClientConfig: &tls.Config{
-				InsecureSkipVerify: os.Getenv("HTTP_PROXY") != "",
-			},
-
 			Proxy: func(r *http.Request) (*url.URL, error) {
 				if p := os.Getenv("HTTP_PROXY"); p != "" {
 					return url.Parse(p)
@@ -85,11 +78,6 @@ func sendRequest(lastName, confirmationCode string) ([]byte, error) {
 	res, err := client.Do(req)
 
 	if err != nil || res == nil || res.StatusCode != 200 {
-		if atomic.AddUint64(&pnrErrorCount, 1) > pnrErrorThreshold {
-			log.Println("Restarting because we have exceeded PNR error threshold")
-			os.Exit(1)
-		}
-
 		if res != nil {
 			log.Println("status code from united:", res.StatusCode)
 		}
