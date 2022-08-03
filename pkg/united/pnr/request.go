@@ -94,6 +94,10 @@ func sendRequest(lastName, confirmationCode string) ([]byte, error) {
 			log.Println("status code from united:", res.StatusCode)
 		}
 
+		if err != nil {
+			log.Println("error from united:", err)
+		}
+
 		return []byte{}, errors.New("status code was not 200")
 	}
 

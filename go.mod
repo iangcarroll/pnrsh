@@ -1,6 +1,6 @@
 module github.com/pnrsh/pnrsh
 
-// +heroku goVersion go1.19
+// +heroku goVersion go1.18
 go 1.17
 
 require (
