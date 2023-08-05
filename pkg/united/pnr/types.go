@@ -671,15 +671,15 @@ type GetPNRResponse struct {
 						PlannedTaxiIn                  interface{} `json:"PlannedTaxiIn"`
 						PlannedTaxiOut                 interface{} `json:"PlannedTaxiOut"`
 						ReasonStatuses                 interface{} `json:"ReasonStatuses"`
-						SegmentNumber                  string      `json:"SegmentNumber"`
+						SegmentNumber                  int         `json:"SegmentNumber"`
 						Ship                           interface{} `json:"Ship"`
 						SpclTerminalMsgsDetails        interface{} `json:"SpclTerminalMsgsDetails"`
 						StateProvince                  interface{} `json:"StateProvince"`
 						Status                         interface{} `json:"Status"`
 						TypeOfSegment                  interface{} `json:"TypeOfSegment"`
 						UpgradeProperties              interface{} `json:"UpgradeProperties"`
-						UpgradeVisibilityType          string      `json:"UpgradeVisibilityType"`
-						UpgradeEligibilityStatus       string      `json:"UpgradeEligibilityStatus"`
+						UpgradeVisibilityType          int         `json:"UpgradeVisibilityType"`
+						UpgradeEligibilityStatus       int         `json:"UpgradeEligibilityStatus"`
 						FareBasisCode                  interface{} `json:"FareBasisCode"`
 						TicketDesignator               interface{} `json:"TicketDesignator"`
 						NotValidAfter                  interface{} `json:"NotValidAfter"`
