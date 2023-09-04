@@ -78,6 +78,7 @@ type Fare struct {
 	FareBasisCode     string
 	EstimatedMQD      string
 	SMCalcLink        string
+	QMCalcLink        string
 }
 
 // Raw API response from Delta.

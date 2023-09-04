@@ -101,3 +101,55 @@ func generateSmcalcLink(pnr *PNR) string {
 	route := generateSmcalcRoute(pnr)
 	return fmt.Sprintf("https://skymilescalculator.com/dist.php?route=%s&start_mqm=0&start_rdm=0&default_fare=T&default_carrier=DL&elite=%s", url.QueryEscape(route), generateSmcalcStatus(pnr))
 }
+
+func generateQMCalcRoute(pnr *PNR) (out string) {
+	for idx, flight := range pnr.Flights {
+		if idx == 0 {
+			out += flight.OriginAirportCode
+		}
+
+		var fare string
+		if len(flight.ClassOfService) == 0 {
+			fare = flight.MarketingAirlineCode
+		} else {
+			fare = fmt.Sprintf("%s.%s", flight.MarketingAirlineCode, flight.ClassOfService)
+		}
+
+		if len(flight.OperatingAirlineCode) > 0 {
+			fare += fmt.Sprintf("/%s", flight.OperatingAirlineCode)
+		}
+
+		out += fmt.Sprintf("-%s-%s", fare, flight.DestinationAirportCode)
+	}
+
+	if pnr.Fare.TotalFare != "" && pnr.Fare.TotalCurrencyCode == "USD" {
+		out += " $" + pnr.Fare.EstimatedMQD
+	}
+
+	return out
+}
+
+func generateQMCalcLink(pnr *PNR) string {
+	route := generateQMCalcRoute(pnr)
+	queryString := "?q=" + route
+
+	status := highestStatus(pnr)
+	if status != "" {
+		queryString += "&s=" + status
+	}
+
+	return fmt.Sprintf("https://www.qualifyingmiles.com/%s", queryString)
+}
+
+func highestStatus(pnr *PNR) string {
+	tiers := []string{"360", "DM", "PM", "GM", "FO", "SM", "GM", ""}
+	for _, tier := range tiers {
+		for _, pax := range pnr.Passengers {
+			if pax.Status == tier {
+				return tier
+			}
+		}
+	}
+
+	return ""
+}

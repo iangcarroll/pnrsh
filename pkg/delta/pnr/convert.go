@@ -132,6 +132,7 @@ func convertFare(res RetrievePnrResponse, pnr *PNR) {
 	pnr.Fare = convertedFare
 	pnr.Fare.EstimatedMQD = estimateMQD(pnr)
 	pnr.Fare.SMCalcLink = generateSmcalcLink(pnr)
+	pnr.Fare.QMCalcLink = generateQMCalcLink(pnr)
 }
 
 func convertReceiptResponse(res RetrievePnrResponse, pnr *PNR) {
