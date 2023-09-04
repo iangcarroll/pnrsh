@@ -16,7 +16,7 @@ const (
 	reqEndpoint = `https://www.united.com/api/myTrips/lookup`
 	reqBody     = `{"confirmationNumber":"{conf}","lastName":"{lname}","mpUserName":"","region":"US","isDecryptNeeded":false,"encryptedTripDetails":"","partnerCode":null}`
 
-	userAgent = `Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.54 Safari/537.36`
+	userAgent = `Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36`
 )
 
 var (
