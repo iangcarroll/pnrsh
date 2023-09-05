@@ -1,0 +1,90 @@
+{{template "base" .}}
+
+{{define "main"}}
+<div class="container">
+    <h2>Confirmation #{{.ConfirmationCode}}</h2>
+
+    <div class="d-flex" style="gap: 0.5em; align-items: center;">
+        <div class="p-1" style="color: black">Tools</div>
+        <a class="btn btn-primary" href="{{.PNR.SMCalcLink}}" target="_blank">skymilescalculator.com</a>
+        <a class="btn btn-secondary" href="{{.PNR.QMCalcLink}}" target="_blank">qualifyingmiles.com</a>
+        {{ if .PNR.HasDLFlights }}
+        <span class="px-1">&middot;</span>
+        <form method="POST" action="/delta">
+            <input type="hidden" name="first_name" value="{{ .FirstName }}" />
+            <input type="hidden" name="last_name" value="{{ .LastName }}" />
+            <input type="hidden" name="confirmation_code" value="{{ .ConfirmationCode }}" />
+            <button class="btn btn-dark" type="submit">Lookup Delta PNR</button>
+        </form>
+        {{ end }}
+    </div>
+
+    <hr />
+
+    {{ range .PNR.Tickets }}
+
+    <div class="card mb-4" style="background: #e7eefa">
+        <div class="card-body" style="background: white; border-bottom: #ddd 1px solid; background: white;">
+            <h5 class="card-title">Ticket {{ .Number }}</h5>
+            <div><strong>Issued</strong>: {{ .IssueDate }}</div>
+            <div><strong>Passenger</strong>: {{ .PassengerName }}</div>
+            <div><strong>FFP</strong>: {{ .Passenger.FrequentFlyerNumber }} &mdash; {{ .Passenger.FrequentFlyerProgram }}</div>
+            <div><strong>Base Fare</strong>: {{ .Fare.BaseFare }} {{ .Fare.BaseCurrencyCode }}</div>
+            <div><strong>Carrier-Imposed Surcharges</strong>: {{ .Fare.CarrierImposedSurcharge }} {{ .Fare.CarrierImposedSurchargeCode }}</div>
+            <div><strong>Taxes</strong>: {{ .Fare.TotalTax }} {{ .Fare.TotalTaxCurrencyCode }}</div>
+            <div><strong>Total Fare</strong>: {{ .Fare.TotalFare }} {{ .Fare.TotalCurrencyCode }}</div>
+        </div>
+
+        {{ range .Flights }}
+            <div class="card-body mt-2" style="border-top: #ddd 1px solid; background: white;">
+                <div class="d-flex" style="align-items: flex-start">
+                    <h5 style="flex-grow: 1">
+                        <strong>{{.MarketingAirlineCode}}{{.FlightNumber}}</strong>
+                        <span class="px-1">&middot;</span>
+                        {{.OriginAirportCode}} &rarr; {{.DestinationAirportCode}}
+                        <span class="px-1">&middot;</span>
+                        <span class="badge bg-primary">{{.Status}}</span>
+                    </h5>
+                    {{ if .SkyPriority }}
+                        <span class="d-block badge bg-danger" style="background: #DF1B2B;">SKYPRIORITY</span>
+                    {{ end }}
+                </div>
+            </div>
+            <table class="table mb-0" style="background: white;">
+                    <tr>
+                        <td><strong>Scheduled Departure</strong></td>
+                        <td>{{.ScheduledDeparture}}</td>
+                    </tr>
+
+                    <tr>
+                        <td><strong>Scheduled Arrival</strong></td>
+                        <td>{{.ScheduledArrival}}</td>
+                    </tr>
+
+                    <tr>
+                        <td><strong>Marketing Airline</strong></td>
+                        <td>{{.MarketingAirlineCode}} &mdash; {{ .MarketingAirlineName }}</td>
+                    </tr>
+
+                    <tr>
+                        <td><strong>Operating Airline</strong></td>
+                        <td>{{.OperatingAirlineCode}} &mdash; {{ .OperatingAirlineName }}</td>
+                    </tr>
+
+                    <tr>
+                        <td><strong>Aircraft</strong></td>
+                        <td>{{.AircraftType}}</td>
+                    </tr>
+
+                    <tr>
+                        <td><strong>Class of Service</strong></td>
+                        <td>{{.ClassOfService}} ({{.FareClass}})</td>
+                    </tr>
+                </tbody>
+            </table>
+        {{ end }}
+    </div>
+
+    {{ end }}
+</div>
+{{end}}

@@ -46,6 +46,17 @@ func AircanadaHomeHandler(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
+func AirfranceklmHomeHandler(w http.ResponseWriter, r *http.Request) {
+	t := Parse("airfranceklm-home.html")
+	t.Execute(w, struct {
+		Error      bool
+		CommitHash string
+	}{
+		r.URL.Query().Get("error") == "t",
+		commitHash,
+	})
+}
+
 func UnitedHomeHandler(w http.ResponseWriter, r *http.Request) {
 	t := Parse("united-home.html")
 	t.Execute(w, struct {
