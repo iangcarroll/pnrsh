@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"net/url"
 	"os"
 	"strings"
 	"sync"
@@ -32,7 +33,19 @@ var (
 		"User-Agent":                "Fly Delta iPhone, iOS 15.3, 5.14, Phone",
 	}
 
-	client = http.Client{}
+	client = http.Client{
+		Timeout: time.Second * 15,
+
+		Transport: &http.Transport{
+			Proxy: func(r *http.Request) (*url.URL, error) {
+				if p := os.Getenv("HTTP_PROXY"); p != "" {
+					return url.Parse(p)
+				}
+
+				return nil, nil
+			},
+		},
+	}
 )
 
 func generateRequestBody(firstName, lastName, confirmationCode string) string {
@@ -61,12 +74,6 @@ func sendRequest(apiServer, firstName, lastName, confirmationCode string) ([]byt
 	res, err := client.Do(req)
 
 	if res.StatusCode != 200 {
-		go func() {
-			time.Sleep(time.Second)
-			log.Println("shutting down to non-200 PNR response", res.StatusCode)
-			os.Exit(0)
-		}()
-
 		return []byte{}, errors.New("status code was not 200")
 	}
 
