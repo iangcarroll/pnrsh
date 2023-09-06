@@ -10,6 +10,7 @@ pnr.sh uses normal and public APIs to obtain reservation information that is alr
 | Airline                 | Supported | Notes                                                    |
 |-------------------------|-----------|----------------------------------------------------------|
 | Aeromexico              | ✅         | Provides most useful PNR data.                          |
+| Air France-KLM          | ✅         | Provides most useful PNR data.                          |
 | Delta Air Lines         | ✅         | Provides most useful PNR data.                          |
 | United                  | ✅         | Provides most useful PNR data.                          |
 | Virgin Atlantic         | ✅         | Provides most useful PNR data.                          |

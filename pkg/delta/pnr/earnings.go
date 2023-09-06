@@ -131,11 +131,11 @@ func generateQMCalcRoute(pnr *PNR) (out string) {
 
 func generateQMCalcLink(pnr *PNR) string {
 	route := generateQMCalcRoute(pnr)
-	queryString := "?q=" + route
+	queryString := "?q=" + url.QueryEscape(route)
 
 	status := highestStatus(pnr)
 	if status != "" {
-		queryString += "&s=" + status
+		queryString += "&s=" + url.QueryEscape(status)
 	}
 
 	return fmt.Sprintf("https://www.qualifyingmiles.com/%s", queryString)

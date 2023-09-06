@@ -11,11 +11,12 @@ import (
 )
 
 const (
-	aeromexicoEnabled = true
-	aircanadaEnabled  = true
-	deltaEnabled      = true
-	unitedEnabled     = true
-	virginEnabled     = true
+	aeromexicoEnabled   = true
+	aircanadaEnabled    = true
+	airfranceklmEnabled = true
+	deltaEnabled        = true
+	unitedEnabled       = true
+	virginEnabled       = true
 )
 
 var (
@@ -43,6 +44,11 @@ func main() {
 	if aircanadaEnabled {
 		r.HandleFunc("/aircanada", AircanadaHomeHandler).Methods("GET")
 		r.HandleFunc("/aircanada", AircanadaRetrieveHandler).Methods("POST")
+	}
+
+	if airfranceklmEnabled {
+		r.HandleFunc("/airfranceklm", AirfranceklmHomeHandler).Methods("GET")
+		r.HandleFunc("/airfranceklm", AirfranceklmRetrieveHandler).Methods("POST")
 	}
 
 	if deltaEnabled {
