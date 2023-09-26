@@ -106,6 +106,8 @@ func generateQMCalcRoute(pnr *PNR) (out string) {
 	for idx, flight := range pnr.Flights {
 		if idx == 0 {
 			out += flight.OriginAirportCode
+		} else if pnr.Flights[idx-1].DestinationAirportCode != flight.OriginAirportCode {
+			out += "//" + flight.OriginAirportCode
 		}
 
 		var fare string
